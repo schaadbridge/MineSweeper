@@ -13,6 +13,7 @@ import android.view.View
 import com.example.minesweeper.MainActivity
 import com.example.minesweeper.R
 import com.example.minesweeper.model.MineSweeperModel
+import com.google.android.material.snackbar.Snackbar
 
 class MineSweeperView (context: Context?, attrs: AttributeSet?) : View(context, attrs){
     lateinit var paintBackground : Paint
@@ -24,7 +25,6 @@ class MineSweeperView (context: Context?, attrs: AttributeSet?) : View(context, 
     var bitmapUnclicked = BitmapFactory.decodeResource(resources, R.drawable.blankcell)
     var bitmapFlagged = BitmapFactory.decodeResource(resources, R.drawable.flaggedcell)
     var bitmapClickedBomb = BitmapFactory.decodeResource(resources, R.drawable.bombclicked)
-    var bitmapUnclickedBomb = BitmapFactory.decodeResource(resources, R.drawable.bombunclicked)
 
     init{
         paintBackground = Paint()
@@ -49,6 +49,8 @@ class MineSweeperView (context: Context?, attrs: AttributeSet?) : View(context, 
             bitmapUnclicked, width/numRows, height/numColumns, false)
         bitmapFlagged = Bitmap.createScaledBitmap(
             bitmapFlagged, width/numRows, height/numColumns, false)
+        bitmapClickedBomb = Bitmap.createScaledBitmap(
+            bitmapClickedBomb, width/numRows, height/numColumns, false)
 
     }
 
@@ -71,12 +73,14 @@ class MineSweeperView (context: Context?, attrs: AttributeSet?) : View(context, 
                 if ((context as MainActivity).isFlagModeOn()) {
                     MineSweeperModel.setFieldFlagged(tX,tY)
                 }
-                else if  (!MineSweeperModel.getIsFlagged(tX,tY)) {
+                else if  (!MineSweeperModel.getIsFlagged(tX,tY) && !MineSweeperModel.getWasClicked(tX,tY)) {
                     MineSweeperModel.setFieldClicked(tX, tY)
                     if (MineSweeperModel.getIsSafe(tX,tY)) MineSweeperModel.safeRemain--
                 }
             }
-
+            if (MineSweeperModel.safeRemain <=0) {
+                (context as MainActivity).setWinStatus(2)
+            }
             invalidate()
         }
         return true
@@ -119,9 +123,7 @@ class MineSweeperView (context: Context?, attrs: AttributeSet?) : View(context, 
                 }
             }
         }
-        if (MineSweeperModel.safeRemain <=0) {
-            (context as MainActivity).setWinStatus(2)
-        }
+
     }
 
     fun resetGame() {

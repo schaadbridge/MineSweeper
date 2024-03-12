@@ -13,7 +13,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="MineSweeper"
+        android:text="@string/minesweeper"
         android:textSize="40sp"
         android:layout_margin="10dp"/>
 
@@ -41,7 +41,7 @@
             android:id="@+id/flag_Mode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Flag mode?"
+            android:text="@string/flag_mode"
             android:layout_margin="4dp">
 
         </CheckBox>
